@@ -1,13 +1,18 @@
 package com.example.invoicegeneratorapi;
 
 import com.rabbitmq.client.Channel;
+import javafx.scene.control.Alert;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.rabbitmq.client.ConnectionFactory;
+
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/invoices")
@@ -40,6 +45,17 @@ public class InvoiceController {
         return ResponseEntity.ok().build();
     }
 
-    //@GetMapping("/{customerID}")
+    @GetMapping("/{customerID}")
+    public ResponseEntity<String> getInvoiceGenerationStatus(@PathVariable final String customerID) {
+        String filePath = "invoice" + LocalDate.now() + ".pdf";
+        File file = new File(filePath);
+
+        if (file.exists() && !file.isDirectory()) {
+            return ResponseEntity.ok(filePath);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PDF nicht gefunden");
+        }
+    }
+
 }
 
