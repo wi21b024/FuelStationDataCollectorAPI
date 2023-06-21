@@ -51,11 +51,13 @@ public class InvoiceController {
         File file = new File(filePath);
 
         if (file.exists() && !file.isDirectory()) {
-            return ResponseEntity.ok(filePath);
+            return ResponseEntity.status(HttpStatus.OK).body(file.getAbsolutePath());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PDF nicht gefunden");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 PDF nicht gefunden:");
         }
     }
+
+
 
 }
 
